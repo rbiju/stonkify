@@ -28,6 +28,11 @@ class PriceNormStrategy(ABC):
         self.norm_column_names = norm_column_names
         pass
 
+    @property
+    @abstractmethod
+    def num_rows(self):
+        raise NotImplementedError
+
     @abstractmethod
     def norm_prices(self, history: pd.DataFrame) -> pd.DataFrame:
         """

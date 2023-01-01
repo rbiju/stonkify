@@ -35,7 +35,7 @@ class NewsSearch(ABC):
     @abstractmethod
     def search(self, query: str,
                helper=True,
-               when: Optional[str or None] = None,
-               from_: Optional[str or None] = None,
-               to_: Optional[str or None] = None):
+               when: Optional[str] = None,
+               from_: Optional[str] = None,
+               to_: Optional[str] = None):
         raise NotImplementedError

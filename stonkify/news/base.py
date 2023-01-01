@@ -7,7 +7,7 @@ from newspaper import Article
 
 class NewsRetriever(ABC):
     def __init__(self):
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def get_news(self, query: str, from_: datetime, to_: datetime) -> List[Article]:

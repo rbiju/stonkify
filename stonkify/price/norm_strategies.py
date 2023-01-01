@@ -13,6 +13,10 @@ class DeltaNormStrategy(PriceNormStrategy):
         super().__init__(norm_column_names=['delta_norm'])
         self.epsilon = epsilon
 
+    @property
+    def num_rows(self):
+        return 1
+
     def norm_prices(self, history: pd.DataFrame) -> pd.DataFrame:
         temp: pd.Series = history[HistoryColumns.CLOSE.value].shift(periods=1)
         norm_col = (history[HistoryColumns.CLOSE.value] > temp).astype(int)
@@ -38,6 +42,10 @@ class CompositeNormStrategy(PriceNormStrategy):
 
         super().__init__(norm_column_names=norm_column_names)
         self.strategies = strategies
+
+    @property
+    def num_rows(self):
+        return len(self.strategies)
 
     def norm_prices(self, history: pd.DataFrame) -> pd.DataFrame:
         history_ = history
