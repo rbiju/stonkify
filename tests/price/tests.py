@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from stonkify.news import GoogleNewsRetriever
 from stonkify.price import DeltaNormStrategy, YFinancePriceRetriever, Interval
 
 
@@ -16,12 +15,5 @@ def test_price_norm():
     return norm_prices
 
 
-def test_news_retrieval():
-    news_retriever = GoogleNewsRetriever()
-    out = news_retriever.get_news(query="Microsoft, Inc.")
-
-    return out
-
-
 if __name__ == "__main__":
-    test_news_retrieval()
+    test_price_norm()
