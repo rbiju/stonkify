@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import List
 
 import torch
 import torch.nn as nn
@@ -11,5 +12,5 @@ class NLPEmbedder(ABC, nn.Module):
         super().__init__()
 
     @abstractmethod
-    def embed(self, x: Sentence) -> torch.Tensor:
+    def embed(self, x: List[Sentence]) -> torch.Tensor:
         raise NotImplementedError
