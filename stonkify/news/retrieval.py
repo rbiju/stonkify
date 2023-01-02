@@ -13,14 +13,17 @@ class GoogleNewsRetriever(NewsRetriever):
         self.engine = news_engine
 
     def get_news(self, query: str,
+                 when_: Optional[datetime] = None,
                  from_: Optional[datetime] = None,
                  to_: Optional[datetime] = None) -> List[Article]:
+        if when_ is not None:
+            when_ = when_.strftime("%m/%d/%Y")
         if from_ is not None:
             from_ = from_.strftime("%m/%d/%Y")
         if to_ is not None:
             to_ = to_.strftime("%m/%d/%Y")
 
-        d = self.engine.search(query, from_=from_, to_=to_)
+        d = self.engine.search(query, when=when_, from_=from_, to_=to_)
 
         articles = []
         for entry in d['entries']:
