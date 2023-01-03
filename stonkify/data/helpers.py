@@ -16,11 +16,10 @@ class ArticleDownloadHelper:
             article = articles[try_count]
             try:
                 article.download()
+                article.parse()
             except ArticleException:
                 try_count += 1
                 continue
-
-            article.parse()
 
             downloaded_articles.append(article)
             article_count += 1
@@ -29,4 +28,4 @@ class ArticleDownloadHelper:
         if len(downloaded_articles) < self.num_articles:
             raise ValueError
 
-        return [downloaded_article.title for downloaded_article in downloaded_articles]
+        return downloaded_articles

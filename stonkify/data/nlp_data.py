@@ -14,7 +14,8 @@ def to_relativedelta(tdelta: timedelta) -> relativedelta:
 
 
 class NewsDataset(Dataset):
-    def __init__(self, retriever: NewsRetriever,
+    def __init__(self,
+                 retriever: NewsRetriever,
                  helper: ArticleDownloadHelper,
                  start: datetime,
                  end: datetime,
@@ -33,20 +34,20 @@ class NewsDataset(Dataset):
         return (self.end - self.start) // self.step
 
     def __getitem__(self, idx) -> tuple[str, datetime, list[str]]:
-        when: datetime = self.start + idx * to_relativedelta(self.step)
+        to: datetime = self.start + idx * to_relativedelta(self.step)
 
         articles = self.retriever.get_news(query=f"{self.ticker.info['longName']} financial news",
-                                           when_=when)
+                                           to_=to)
 
         try:
             downloaded_articles = self.helper.download(articles)
         except ValueError:
             raise ValueError((f'Number of articles: {self.helper.num_articles} is unavailable for '
-                              f'date {when} and ticker {self.ticker}'))
+                              f'date {to} and ticker {self.ticker}'))
 
-        return self.ticker.ticker, when, [downloaded_article.title for downloaded_article in downloaded_articles]
+        return self.ticker.ticker, to, [downloaded_article.title for downloaded_article in downloaded_articles]
 
 
 class NewsDataLoader(DataLoader):
-    def __init__(self, dataset: NewsDataset, num_workers: int, batch_size=None):
-        super().__init__(dataset=dataset, batch_size=batch_size, num_workers=num_workers)
+    def __init__(self, dataset: NewsDataset, num_workers: int):
+        super().__init__(dataset=dataset, batch_size=None, num_workers=num_workers)
