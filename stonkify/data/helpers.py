@@ -19,7 +19,7 @@ class ArticleDownloadHelper:
             try:
                 article.download()
                 article.parse()
-                if any(substring in article.text for substring in SKIP_PHRASES):
+                if any(substring in article.title for substring in SKIP_PHRASES):
                     try_count += 1
                     continue
             except ArticleException:
@@ -33,4 +33,4 @@ class ArticleDownloadHelper:
         if len(downloaded_articles) < self.num_articles:
             raise ValueError
 
-        return [downloaded_article.text for downloaded_article in downloaded_articles]
+        return [downloaded_article.title for downloaded_article in downloaded_articles]

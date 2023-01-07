@@ -22,13 +22,14 @@ class NLPInferenceModule(pl.LightningModule):
 
         return out
 
-    def predict_step(self, batch: tuple[str, datetime, list[str]],
+    def predict_step(self, batch: tuple[tuple[str], tuple[datetime], list[list[str]]],
                      batch_idx: int,
-                     dataloader_idx: int = 0) -> tuple[str, datetime, list[str]]:
-        ticker, date, titles = batch
-        sentences = self.preprocess(titles=titles)
+                     dataloader_idx: int = 0):
+        tickers, dates, titles = batch
+        sentences = [self.preprocess(titles=title) for title in titles]
 
-        embeddings = self.forward(sentences)
+        embeddings = [self.forward(sentence) for sentence in sentences]
 
-        return ticker, date, embeddings
-
+        return {"tickers": tickers,
+                "dates": dates,
+                "embeddings": embeddings}
