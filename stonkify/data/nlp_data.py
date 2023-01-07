@@ -44,7 +44,7 @@ class NewsDataset(Dataset):
         ticker = yf.Ticker(self.ticker)
         to: datetime = self.start + idx * to_relativedelta(self.step)
 
-        articles = self.retriever.get_news(query=f"{ticker.info['longName']} financial news",
+        articles = self.retriever.get_news(query=f"{ticker.info['longName']} stock news",
                                            to_=to)
 
         try:
