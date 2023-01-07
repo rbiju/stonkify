@@ -41,7 +41,8 @@ def test_dataloader():
                           start=datetime(2022, 10, 1),
                           end=datetime(2022, 12, 30),
                           step=timedelta(weeks=1),
-                          ticker='MSFT')
+                          ticker='MSFT',
+                          query="stock analysis")
 
     dataloader = NewsDataLoader(dataset=dataset, batch_size=2, num_workers=2)
 
