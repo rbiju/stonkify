@@ -1,8 +1,15 @@
+from datetime import timedelta
 from typing import List
 
+from dateutil.relativedelta import relativedelta
 from newspaper.article import ArticleException, Article
 
 from .constants import SKIP_PHRASES
+
+
+def to_relativedelta(tdelta: timedelta) -> relativedelta:
+    return relativedelta(seconds=int(tdelta.total_seconds()),
+                         microseconds=tdelta.microseconds)
 
 
 class ArticleDownloadHelper:
