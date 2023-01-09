@@ -8,20 +8,6 @@ from .base import NewsDataset
 from .helpers import ArticleDownloadHelper, to_relativedelta
 
 
-def news_collate(data_list: list[tuple[str, str, list[tuple[str]]]]):
-    ticker, dates, texts = list(zip(*data_list))
-    date_objects = tuple([datetime.strptime(date, "%Y/%m/%d") for date in dates])
-
-    return ticker, date_objects, list(texts)
-
-
-def global_news_collate(data_list: list[tuple[str, list[tuple[str]]]]):
-    dates, texts = list(zip(*data_list))
-    date_objects = tuple([datetime.strptime(date, "%Y/%m/%d") for date in dates])
-
-    return date_objects, list(texts)
-
-
 class TickerNewsDataset(NewsDataset):
     def __init__(self,
                  retriever: NewsRetriever,
