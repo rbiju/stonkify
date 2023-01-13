@@ -77,4 +77,4 @@ class GlobalNewsDataset(NewsDataset):
 
 class NewsDataLoader(DataLoader):
     def __init__(self, dataset: NewsDataset, batch_size: int, num_workers: int):
-        super().__init__(dataset=dataset, batch_size=batch_size, num_workers=num_workers, collate_fn=dataset.collate_fn)
+        super().__init__(dataset=dataset, batch_size=batch_size, num_workers=num_workers, collate_fn=dataset.collate_fn, drop_last=True)

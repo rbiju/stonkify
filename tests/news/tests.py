@@ -3,29 +3,29 @@ from datetime import datetime, timedelta
 from flair.embeddings import SentenceTransformerDocumentEmbeddings
 
 from stonkify.news import GoogleNewsRetriever
-from stonkify.data import NewsDataset, NewsDataLoader, ArticleDownloadHelper
+from stonkify.data import TickerNewsDataset, NewsDataLoader, ArticleDownloadHelper
 from stonkify.nlp import NLPInferenceModule, FlairEmbedder
 
 test_batch = (('MSFT', 'MSFT'),
               (datetime(2022, 10, 1, 0, 0), datetime(2022, 10, 8, 0, 0)),
-              [['Microsoft earnings press release available on Investor Relations website',
-                'Microsoft misses estimates but stock up 5% on rosy guidance',
-                'Microsoft Q4 FY2022 Earnings Report Recap', 'Microsoft announces quarterly dividend increase',
-                'Microsoft announces quarterly dividend increase',
-                'Why Microsoft Stock Popped, Then Dropped, on Wednesday',
-                'Microsoft to acquire Activision Blizzard to bring the joy and community of gaming to everyone, across every device',
-                'Barclays deploys Microsoft Teams globally as its preferred collaboration platform to enable better connectivity for its employees worldwide',
-                'Microsoft eases up on hiring as economic concerns hit more of the tech industry',
-                'Microsoft Inspire 2022: Unlocking new partner opportunities, solutions for hybrid work and more'],
-               ['Microsoft earnings press release available on Investor Relations website',
-                'Microsoft misses estimates but stock up 5% on rosy guidance',
-                'Microsoft Q4 FY2022 Earnings Report Recap', 'Microsoft announces quarterly dividend increase',
-                'Microsoft announces quarterly dividend increase',
-                'Why Microsoft Stock Popped, Then Dropped, on Wednesday',
-                'Microsoft to acquire Activision Blizzard to bring the joy and community of gaming to everyone, across every device',
-                'Barclays deploys Microsoft Teams globally as its preferred collaboration platform to enable better connectivity for its employees worldwide',
-                'Microsoft eases up on hiring as economic concerns hit more of the tech industry',
-                'Microsoft Inspire 2022: Unlocking new partner opportunities, solutions for hybrid work and more']])
+              [["What Is Microsoft Corporation's (NASDAQ:MSFT) Share Price Doing?",
+                'Declining Stock and Solid Fundamentals: Is The Market Wrong About Microsoft Corporation (NASDAQ:MSFT)?',
+                'Microsoft Stock Tests Recent Resistance (NASDAQ:MSFT)',
+                'Heading Into Its Q3, Is Microsoft (MSFT) A Buy?',
+                'Is Trending Stock Microsoft Corporation (MSFT) a Buy Now?',
+                'Where Will Microsoft Stock Be In 5 Years? (NASDAQ:MSFT)',
+                'The Zacks Analyst Blog Highlights Microsoft, Danaher, Raytheon Technologies, Stryker Corporation and Vale',
+                "Microsoft Stock: It's Not Always A Buy (NASDAQ:MSFT)", 'Is Microsoft Stock Cheap? (NASDAQ:MSFT)',
+                'Top Research Reports for Microsoft, Meta Platforms & Thermo Fisher Scientific'],
+               ["What Is Microsoft Corporation's (NASDAQ:MSFT) Share Price Doing?",
+                'Declining Stock and Solid Fundamentals: Is The Market Wrong About Microsoft Corporation (NASDAQ:MSFT)?',
+                'Microsoft Stock Tests Recent Resistance (NASDAQ:MSFT)',
+                'Heading Into Its Q3, Is Microsoft (MSFT) A Buy?',
+                'Is Trending Stock Microsoft Corporation (MSFT) a Buy Now?',
+                "The Two Sides of Microsoft: Strong Fundamentals vs. Insiders' Selling Activity",
+                'Where Will Microsoft Stock Be In 5 Years? (NASDAQ:MSFT)',
+                'The Zacks Analyst Blog Highlights Microsoft, Danaher, Raytheon Technologies, Stryker Corporation and Vale',
+                "Microsoft Stock: It's Not Always A Buy (NASDAQ:MSFT)", 'Is Microsoft Stock Cheap? (NASDAQ:MSFT)']])
 
 
 def test_news_retrieval():
@@ -36,15 +36,15 @@ def test_news_retrieval():
 
 
 def test_dataloader():
-    dataset = NewsDataset(retriever=GoogleNewsRetriever(),
-                          helper=ArticleDownloadHelper(max_tries=20, num_articles=10),
-                          start=datetime(2022, 10, 1),
-                          end=datetime(2022, 12, 30),
-                          step=timedelta(weeks=1),
-                          ticker='MSFT',
-                          query="stock analysis")
+    dataset = TickerNewsDataset(retriever=GoogleNewsRetriever(),
+                                helper=ArticleDownloadHelper(max_tries=20, num_articles=10),
+                                start=datetime(2022, 10, 1),
+                                end=datetime(2022, 12, 30),
+                                step=timedelta(weeks=1),
+                                ticker='MSFT',
+                                query="stock analysis")
 
-    dataloader = NewsDataLoader(dataset=dataset, batch_size=2, num_workers=2)
+    dataloader = NewsDataLoader(dataset=dataset, batch_size=6, num_workers=6)
 
     batch = next(iter(dataloader))
 
@@ -64,4 +64,4 @@ def test_embedder():
 
 
 if __name__ == "__main__":
-    test_embedder()
+    test_dataloader()
