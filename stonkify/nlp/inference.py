@@ -11,25 +11,17 @@ class NLPInferenceModule(pl.LightningModule):
         super().__init__()
         self.embedder = embedder
 
-    @staticmethod
-    def preprocess(titles: list[str]) -> list[Sentence]:
-        sentence_titles = [Sentence(title) for title in titles]
-
-        return sentence_titles
-
     def forward(self, x: list[Sentence]):
         out = self.embedder.embed(x)
 
         return out
 
-    def predict_step(self, batch: tuple[tuple[str], tuple[datetime], list[list[str]]],
+    def predict_step(self, batch: tuple[tuple[str], tuple[datetime], list[list[Sentence]]],
                      batch_idx: int,
                      dataloader_idx: int = 0):
-        tickers, dates, titles = batch
-        sentences = [self.preprocess(titles=title) for title in titles]
+        labels, dates, titles_list = batch
+        embeddings = [self.forward(titles) for titles in titles_list]
 
-        embeddings = [self.forward(sentence) for sentence in sentences]
-
-        return {"tickers": tickers,
+        return {"labels": labels,
                 "dates": dates,
                 "embeddings": embeddings}

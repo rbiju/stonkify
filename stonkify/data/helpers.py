@@ -17,6 +17,13 @@ class ArticleDownloadHelper:
         self.max_tries = max_tries
         self.num_articles = num_articles
 
+    @staticmethod
+    def quality_control(text: str) -> bool:
+        if any(substring in text for substring in SKIP_PHRASES):
+            return True
+        if text == '':
+            return True
+
     def download(self, articles: List[Article]) -> List[str]:
         downloaded_articles = []
         try_count = 0
@@ -26,7 +33,7 @@ class ArticleDownloadHelper:
             try:
                 article.download()
                 article.parse()
-                if any(substring in article.title for substring in SKIP_PHRASES):
+                if self.quality_control(article.title):
                     try_count += 1
                     continue
             except ArticleException:

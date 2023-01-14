@@ -44,7 +44,7 @@ def test_dataloader():
                                 ticker='MSFT',
                                 query="stock analysis")
 
-    dataloader = NewsDataLoader(dataset=dataset, batch_size=6, num_workers=6)
+    dataloader = NewsDataLoader(dataset=dataset, batch_size=2, num_workers=6)
 
     batch = next(iter(dataloader))
 
@@ -63,5 +63,17 @@ def test_embedder():
     return embeddings
 
 
+def test_pipeline():
+    batch = test_dataloader()
+
+    embedder = NLPInferenceModule(
+        embedder=FlairEmbedder(
+            embedding=SentenceTransformerDocumentEmbeddings('stsb-distilroberta-base-v2')))
+
+    embeddings = embedder.predict_step(batch, batch_idx=0)
+
+    return embeddings
+
+
 if __name__ == "__main__":
-    test_dataloader()
+    test_pipeline()

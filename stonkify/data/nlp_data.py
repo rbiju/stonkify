@@ -21,15 +21,8 @@ class TickerNewsDataset(NewsDataset):
 
         self.ticker = ticker
 
-    @staticmethod
-    def collate_fn(data_list: list[tuple[str, str, list[tuple[str]]]]):
-        ticker, dates, texts = list(zip(*data_list))
-        date_objects = tuple([datetime.strptime(date, "%Y/%m/%d") for date in dates])
-
-        return ticker, date_objects, list(texts)
-
     def construct_query(self, ticker: yf.Ticker) -> str:
-        return f"{ticker.info['longName']} {self.query}"
+        return f"{ticker.ticker} {self.query}"
 
     def __getitem__(self, idx) -> tuple[str, str, list[str]]:
         ticker = yf.Ticker(self.ticker)
@@ -51,20 +44,12 @@ class GlobalNewsDataset(NewsDataset):
                  end: datetime,
                  step: timedelta,
                  query: str):
-
         super().__init__(retriever=retriever, helper=helper, start=start, end=end, step=step, query=query)
-
-    @staticmethod
-    def collate_fn(data_list: list[tuple[str, list[tuple[str]]]]):
-        dates, texts = list(zip(*data_list))
-        date_objects = tuple([datetime.strptime(date, "%Y/%m/%d") for date in dates])
-
-        return date_objects, list(texts)
 
     def construct_query(self) -> str:
         return self.query
 
-    def __getitem__(self, idx) -> tuple[str, list[str]]:
+    def __getitem__(self, idx) -> tuple[str, str, list[str]]:
         to: datetime = self.start + idx * to_relativedelta(self.step)
 
         articles = self.retriever.get_news(query=f"{self.query}",
@@ -72,9 +57,10 @@ class GlobalNewsDataset(NewsDataset):
 
         downloaded_articles = self.download_articles(articles, to)
 
-        return to.strftime("%Y/%m/%d"), downloaded_articles
+        return "GLOBAL_NEWS", to.strftime("%Y/%m/%d"), downloaded_articles
 
 
 class NewsDataLoader(DataLoader):
     def __init__(self, dataset: NewsDataset, batch_size: int, num_workers: int):
-        super().__init__(dataset=dataset, batch_size=batch_size, num_workers=num_workers, collate_fn=dataset.collate_fn, drop_last=True)
+        super().__init__(dataset=dataset, batch_size=batch_size, num_workers=num_workers, collate_fn=dataset.collate_fn,
+                         drop_last=True)
