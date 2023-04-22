@@ -8,3 +8,7 @@ def test_patch_embed():
     out = patch_embed(test_tensor)
 
     return out
+
+
+if __name__ == "__main__":
+    test_patch_embed()
